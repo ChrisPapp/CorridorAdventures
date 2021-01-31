@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_NODE_H
-#define GEOMETRY_NODE_H
+#pragma once
 
 #include <vector>
 #include "GLEW\glew.h"
@@ -51,5 +50,3 @@ public:
 	GLuint m_vbo_bitangents;
 	GLuint m_vbo_texcoords;
 };
-
-#endif

@@ -3,6 +3,7 @@
 #include <chrono>
 #include "GLEW\glew.h"
 #include "Renderer.h"
+#include "Game.h"
 #include <thread>         // std::this_thread::sleep_for
 
 using namespace std;
@@ -12,8 +13,6 @@ SDL_Window * window;
 
 //OpenGL context 
 SDL_GLContext gContext;
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 860;
 
 //Event handler
 SDL_Event event;
@@ -97,10 +96,10 @@ int main(int argc, char *argv[])
 
 	//Quit flag
 	bool quit = false;
+	auto simulation_start = chrono::steady_clock::now();
+
 	bool mouse_button_pressed = false;
 	glm::vec2 prev_mouse_position(0);
-
-	auto simulation_start = chrono::steady_clock::now();
 
 	// Wait for user exit
 	while (quit == false)
@@ -184,6 +183,8 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		Game &game = Game::Get();
+
 		// Compute the ellapsed time
 		auto simulation_end = chrono::steady_clock::now();
 
@@ -193,6 +194,7 @@ int main(int argc, char *argv[])
 		simulation_start = chrono::steady_clock::now();
 
 		// Update
+		Game::Get().Update(dt);
 		renderer->Update(dt);
 
 		// Draw

@@ -5,6 +5,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "OBJLoader.h"
+#include "Game.h"
 
 #include <algorithm>
 #include <array>
@@ -56,10 +57,10 @@ bool Renderer::Init(int SCREEN_WIDTH, int SCREEN_HEIGHT)
 
 void Renderer::BuildWorld()
 {
-	GeometryNode& ball = *this->m_nodes[OBJECS::BALL];
-	GeometryNode& chair = *this->m_nodes[OBJECS::CHAIR];
-	GeometryNode& floor = *this->m_nodes[OBJECS::FLOOR];
-	GeometryNode& wall = *this->m_nodes[OBJECS::WALLS];
+	GeometryNode& ball = *this->m_nodes[MeshType::BALL];
+	GeometryNode& chair = *this->m_nodes[MeshType::CHAIR];
+	GeometryNode& floor = *this->m_nodes[MeshType::FLOOR];
+	GeometryNode& wall = *this->m_nodes[MeshType::WALLS];
 
 	ball.model_matrix = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 35.f, 0.f));
 	ball.m_aabb.center = glm::vec3(ball.model_matrix * glm::vec4(ball.m_aabb.center, 1.f));
@@ -195,7 +196,7 @@ bool Renderer::InitCommonItems()
 
 bool Renderer::InitGeometricMeshes()
 {
-	std::array<const char*, OBJECS::SIZE_ALL> assets = {
+	std::array<const char*, MeshType::SIZE_ALL> assets = {
 		"Assets/scene/CH-Wall.obj",
 		"Assets/scene/pipe.obj",
 		"Assets/scene/Corridor_Straight.obj",
@@ -243,7 +244,7 @@ void Renderer::Update(float dt)
 
 void Renderer::UpdateGeometry(float dt)
 {
-	GeometryNode& ball = *this->m_nodes[OBJECS::BALL];
+	GeometryNode& ball = *this->m_nodes[MeshType::BALL];
 
 	ball.app_model_matrix =
 		glm::translate(glm::mat4(1.f), ball.m_aabb.center) *
@@ -265,7 +266,7 @@ void Renderer::UpdateCamera(float dt)
 	m_camera_position = m_camera_position + (m_camera_movement.y * 5.f * dt) * right;
 	m_camera_target_position = m_camera_target_position + (m_camera_movement.y * 5.f * dt) * right;
 
-	float speed = glm::pi<float>() * 0.002;
+	constexpr float speed = glm::pi<float>() * 0.002f;
 	glm::mat4 rotation = glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.y * speed, right);
 	rotation *= glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.x * speed, m_camera_up_vector);
 	m_camera_look_angle_destination = glm::vec2(0.f);

@@ -41,15 +41,6 @@ protected:
 	void RenderShadowMaps();
 	void RenderPostProcess();
 
-	enum OBJECS
-	{
-		BALL = 0,
-		CHAIR,
-		FLOOR,
-		WALLS,
-		SIZE_ALL
-	};
-
 	std::vector<GeometryNode*> m_nodes;
 	std::vector<CollidableNode*> m_collidables_nodes;
 
