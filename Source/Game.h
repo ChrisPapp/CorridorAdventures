@@ -1,23 +1,13 @@
 #pragma once
 
 #include "Entity.h"
-#include <set>
-
+#include <unordered_set>
 
 constexpr int SCREEN_WIDTH = 1024;
 constexpr int SCREEN_HEIGHT = 860;
 
-typedef std::set<Entity> EntityContainer;
-typedef EntityContainer::const_iterator EntityContainerCIterator;
-
-enum MeshType
-{
-	BALL = 0,
-	CHAIR,
-	FLOOR,
-	WALLS,
-	SIZE_ALL
-};
+typedef std::unordered_set<Entity*> EntityContainer;
+typedef EntityContainer::iterator EntityContainerIterator;
 
 class Game {
 
@@ -29,11 +19,13 @@ public:
 		return game;
 	}
 
+	~Game();
 
-	EntityContainerCIterator EntitiesBegin();
-	EntityContainerCIterator EntitiesEnd();
+	EntityContainerIterator begin() { return entities.begin(); };
+	EntityContainerIterator end() { return entities.end(); };
 
 	void Update(float delta_time);
+	void Init();
 
 private:
 	EntityContainer entities;

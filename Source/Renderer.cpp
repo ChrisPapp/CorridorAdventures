@@ -4,7 +4,7 @@
 #include "ShaderProgram.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "OBJLoader.h"
+#include "MeshManager.h"
 #include "Game.h"
 
 #include <algorithm>
@@ -57,6 +57,7 @@ bool Renderer::Init(int SCREEN_WIDTH, int SCREEN_HEIGHT)
 
 void Renderer::BuildWorld()
 {
+#if 0
 	GeometryNode& ball = *this->m_nodes[MeshType::BALL];
 	GeometryNode& chair = *this->m_nodes[MeshType::CHAIR];
 	GeometryNode& floor = *this->m_nodes[MeshType::FLOOR];
@@ -70,6 +71,7 @@ void Renderer::BuildWorld()
 	wall.model_matrix = glm::mat4(1.f);
 
 	this->m_world_matrix = glm::scale(glm::mat4(1.f), glm::vec3(0.02, 0.02, 0.02));
+#endif
 }
 
 void Renderer::InitCamera()
@@ -196,43 +198,13 @@ bool Renderer::InitCommonItems()
 
 bool Renderer::InitGeometricMeshes()
 {
-	std::array<const char*, MeshType::SIZE_ALL> assets = {
-		"Assets/scene/CH-Wall.obj",
-		"Assets/scene/pipe.obj",
-		"Assets/scene/Corridor_Straight.obj",
-		"Assets/scene/Corridor_Right.obj", };
+	if (!MeshManager::Get().Init())
+		return false;
+	Game::Get().Init();
+	MeshManager::Get().Clear();
 
-	bool initialized = true;
-	OBJLoader loader;
 
-	for (auto & asset : assets)
-	{
-		GeometricMesh* mesh = loader.load(asset);
-
-		if (mesh != nullptr)
-		{
-			GeometryNode* node = new GeometryNode();
-			node->Init(mesh);
-			this->m_nodes.push_back(node);
-			delete mesh;
-		}
-		else
-		{
-			initialized = false;
-		}
-	}
-
-	GeometricMesh* mesh = loader.load(assets[1]);
-
-	if (mesh != nullptr)
-	{
-		CollidableNode* node = new CollidableNode();
-		node->Init(mesh);
-		this->m_collidables_nodes.push_back(node);
-		delete mesh;
-	}
-
-	return initialized;
+	return true;
 }
 
 void Renderer::Update(float dt)
@@ -244,6 +216,7 @@ void Renderer::Update(float dt)
 
 void Renderer::UpdateGeometry(float dt)
 {
+#if 0
 	GeometryNode& ball = *this->m_nodes[MeshType::BALL];
 
 	ball.app_model_matrix =
@@ -251,7 +224,7 @@ void Renderer::UpdateGeometry(float dt)
 		glm::rotate(glm::mat4(1.f), m_continous_time, glm::vec3(.5f, .5f, 0.f)) *
 		glm::translate(glm::mat4(1.f), -ball.m_aabb.center) *
 		ball.model_matrix;
-
+#endif
 }
 
 void Renderer::UpdateCamera(float dt)
@@ -334,77 +307,35 @@ void Renderer::RenderStaticGeometry()
 {
 	glm::mat4 proj = m_projection_matrix * m_view_matrix * m_world_matrix;
 
-	for (auto& node : this->m_nodes)
+	for (Entity *entity : Game::Get())
 	{
-		glBindVertexArray(node->m_vao);
+		GeometryNode& node = entity->GetDrawnGeometry();
+		glBindVertexArray(node.m_vao);
 
-		m_geometry_program.loadMat4("uniform_projection_matrix", proj * node->app_model_matrix);
-		m_geometry_program.loadMat4("uniform_normal_matrix", glm::transpose(glm::inverse(m_world_matrix * node->app_model_matrix)));
-		m_geometry_program.loadMat4("uniform_world_matrix", m_world_matrix * node->app_model_matrix);
+		m_geometry_program.loadMat4("uniform_projection_matrix", proj * node.app_model_matrix);
+		m_geometry_program.loadMat4("uniform_normal_matrix", glm::transpose(glm::inverse(m_world_matrix * node.app_model_matrix)));
+		m_geometry_program.loadMat4("uniform_world_matrix", m_world_matrix * node.app_model_matrix);
 
-		for (int j = 0; j < node->parts.size(); ++j)
+		for (int j = 0; j < node.parts.size(); ++j)
 		{
-			m_geometry_program.loadVec3("uniform_diffuse", node->parts[j].diffuse);
-			m_geometry_program.loadVec3("uniform_ambient", node->parts[j].ambient);
-			m_geometry_program.loadVec3("uniform_specular", node->parts[j].specular);
-			m_geometry_program.loadFloat("uniform_shininess", node->parts[j].shininess);
-			m_geometry_program.loadInt("uniform_has_tex_diffuse", (node->parts[j].diffuse_textureID > 0) ? 1 : 0);
-			m_geometry_program.loadInt("uniform_has_tex_normal", (node->parts[j].bump_textureID > 0 || node->parts[j].normal_textureID > 0) ? 1 : 0);
-			m_geometry_program.loadInt("uniform_is_tex_bumb", (node->parts[j].bump_textureID > 0) ? 1 : 0);
+			m_geometry_program.loadVec3("uniform_diffuse", node.parts[j].diffuse);
+			m_geometry_program.loadVec3("uniform_ambient", node.parts[j].ambient);
+			m_geometry_program.loadVec3("uniform_specular", node.parts[j].specular);
+			m_geometry_program.loadFloat("uniform_shininess", node.parts[j].shininess);
+			m_geometry_program.loadInt("uniform_has_tex_diffuse", (node.parts[j].diffuse_textureID > 0) ? 1 : 0);
+			m_geometry_program.loadInt("uniform_has_tex_normal", (node.parts[j].bump_textureID > 0 || node.parts[j].normal_textureID > 0) ? 1 : 0);
+			m_geometry_program.loadInt("uniform_is_tex_bumb", (node.parts[j].bump_textureID > 0) ? 1 : 0);
 
 			glActiveTexture(GL_TEXTURE0);
 			m_geometry_program.loadInt("uniform_tex_diffuse", 0);
-			glBindTexture(GL_TEXTURE_2D, node->parts[j].diffuse_textureID);
+			glBindTexture(GL_TEXTURE_2D, node.parts[j].diffuse_textureID);
 
 			glActiveTexture(GL_TEXTURE1);
 			m_geometry_program.loadInt("uniform_tex_normal", 1);
-			glBindTexture(GL_TEXTURE_2D, node->parts[j].bump_textureID > 0 ?
-				node->parts[j].bump_textureID : node->parts[j].normal_textureID);
+			glBindTexture(GL_TEXTURE_2D, node.parts[j].bump_textureID > 0 ?
+				node.parts[j].bump_textureID : node.parts[j].normal_textureID);
 
-			glDrawArrays(GL_TRIANGLES, node->parts[j].start_offset, node->parts[j].count);
-		}
-
-		glBindVertexArray(0);
-	}
-}
-
-void Renderer::RenderCollidableGeometry()
-{
-	glm::mat4 proj = m_projection_matrix * m_view_matrix * m_world_matrix;
-
-	glm::vec3 camera_dir = normalize(m_camera_target_position - m_camera_position);
-	float_t isectT = 0.f;
-
-	for (auto& node : this->m_collidables_nodes)
-	{
-		if (node->intersectRay(m_camera_position, camera_dir, m_world_matrix, isectT)) continue;
-
-		glBindVertexArray(node->m_vao);
-
-		m_geometry_program.loadMat4("uniform_projection_matrix", proj * node->app_model_matrix);
-		m_geometry_program.loadMat4("uniform_normal_matrix", glm::transpose(glm::inverse(m_world_matrix * node->app_model_matrix)));
-		m_geometry_program.loadMat4("uniform_world_matrix", m_world_matrix * node->app_model_matrix);
-
-		for (int j = 0; j < node->parts.size(); ++j)
-		{
-			m_geometry_program.loadVec3("uniform_diffuse", node->parts[j].diffuse);
-			m_geometry_program.loadVec3("uniform_ambient", node->parts[j].ambient);
-			m_geometry_program.loadVec3("uniform_specular", node->parts[j].specular);
-			m_geometry_program.loadFloat("uniform_shininess", node->parts[j].shininess);
-			m_geometry_program.loadInt("uniform_has_tex_diffuse", (node->parts[j].diffuse_textureID > 0) ? 1 : 0);
-			m_geometry_program.loadInt("uniform_has_tex_normal", (node->parts[j].bump_textureID > 0 || node->parts[j].normal_textureID > 0) ? 1 : 0);
-			m_geometry_program.loadInt("uniform_is_tex_bumb", (node->parts[j].bump_textureID > 0) ? 1 : 0);
-
-			glActiveTexture(GL_TEXTURE0);
-			m_geometry_program.loadInt("uniform_tex_diffuse", 0);
-			glBindTexture(GL_TEXTURE_2D, node->parts[j].diffuse_textureID);
-
-			glActiveTexture(GL_TEXTURE1);
-			m_geometry_program.loadInt("uniform_tex_normal", 1);
-			glBindTexture(GL_TEXTURE_2D, node->parts[j].bump_textureID > 0 ?
-				node->parts[j].bump_textureID : node->parts[j].normal_textureID);
-
-			glDrawArrays(GL_TRIANGLES, node->parts[j].start_offset, node->parts[j].count);
+			glDrawArrays(GL_TRIANGLES, node.parts[j].start_offset, node.parts[j].count);
 		}
 
 		glBindVertexArray(0);
