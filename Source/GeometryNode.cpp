@@ -1,6 +1,7 @@
 #include "GeometryNode.h"
 #include "GeometricMesh.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "TextureManager.h"
 
 GeometryNode::GeometryNode()
@@ -156,4 +157,10 @@ void GeometryNode::Init(GeometricMesh* mesh)
 	}
 
 	this->m_aabb.center = (this->m_aabb.min + this->m_aabb.max) * 0.5f;
+}
+
+void GeometryNode::SetPosition(const glm::vec3& pos)
+{
+	this->m_aabb.center = pos;
+	this->app_model_matrix = glm::translate(glm::mat4(1.f), this->m_aabb.center);
 }

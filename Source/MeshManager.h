@@ -3,13 +3,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "Entity.h"
 #include "GeometricMesh.h"
-
-enum MeshType
-{
-	WALL = 0,
-	SIZE_ALL
-};
 
 class MeshManager {
 

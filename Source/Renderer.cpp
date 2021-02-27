@@ -96,7 +96,7 @@ bool Renderer::InitLights()
 	this->m_light.SetColor(glm::vec3(40.f));
 	this->m_light.SetPosition(glm::vec3(0, 3, 4.5));
 	this->m_light.SetTarget(glm::vec3(0));
-	this->m_light.SetConeSize(40, 50);
+	this->m_light.SetConeSize(400, 500);
 	this->m_light.CastShadow(true);
 
 	return true;
@@ -264,6 +264,8 @@ bool Renderer::ReloadShaders()
 
 void Renderer::Render()
 {
+	this->m_light.SetPosition(m_camera_position + glm::vec3(0, 0, 0.1f) * glm::normalize(m_camera_target_position - m_camera_position));
+	this->m_light.SetTarget(m_camera_target_position);
 	RenderShadowMaps();
 	RenderGeometry();
 	RenderPostProcess();

@@ -1,10 +1,19 @@
 #include "MeshManager.h"
+#include "Entity.h"
 
 static std::unordered_map<MeshType, const char*> mesh_paths = {
+	{MeshType::CORRIDOR_L, "Assets/scene/Corridor_Left.obj"},
+	{MeshType::CORRIDOR_R, "Assets/scene/Corridor_Right.obj"},
+	{MeshType::CORRIDOR_F, "Assets/scene/Corridor_Fork.obj"},
+	{MeshType::CORRIDOR_S, "Assets/scene/Corridor_Straight.obj"},
 	{MeshType::WALL, "Assets/scene/Wall.obj"},
 };
 
 static std::unordered_map<MeshType, const char*> collidable_paths = {
+	{MeshType::CORRIDOR_L, "Assets/scene/CH-Corridor_Left.obj"},
+	{MeshType::CORRIDOR_R, "Assets/scene/CH-Corridor_Right.obj"},
+	{MeshType::CORRIDOR_F, "Assets/scene/CH-Corridor_Fork.obj"},
+	{MeshType::CORRIDOR_S, "Assets/scene/CH-Corridor_Straight.obj"},
 	{MeshType::WALL, "Assets/scene/CH-Wall.obj"},
 };
 
