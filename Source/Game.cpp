@@ -7,19 +7,20 @@
 
 void Game::Init()
 {
-	corridors.push_back(new Corridor(MeshType::CORRIDOR_S, glm::vec3(0, 0, 0)));
-	corridors.push_back(new Corridor(MeshType::CORRIDOR_L, glm::vec3(0, 0, -20)));
+	CorridorTree tree{ {straight, left, right, straight}, new CorridorTree({{left, straight}}), new CorridorTree({{right, straight}}) };
+	this->level = new Level(tree);
 }
 
 Game::~Game()
 {
-	std::for_each(corridors.begin(), corridors.end(), [](Corridor* corridor) { delete corridor; });
+	delete level;
 	std::for_each(entities.begin(), entities.end(), [](Entity* entity) { delete entity; });
 }
 
 void Game::Update(float delta_time)
 {
-
+	if (!this->level->Update(delta_time))
+		exit(0);
 }
 
 Entity *Game::AddEntity(MeshType type, const glm::vec3& pos)

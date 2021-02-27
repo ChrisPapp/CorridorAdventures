@@ -20,7 +20,7 @@ public:
 	CollidableNode& GetCollidableGeometry() { return collisionGeom; };
 
 	void SetPosition(const glm::vec3 &pos);
-	virtual bool Update();
+	virtual bool Update(float dt);
 private:
 	friend class Game;
 	Entity(enum MeshType type, const glm::vec3 &pos = glm::vec3(0.f));

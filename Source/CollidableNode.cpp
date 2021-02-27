@@ -25,8 +25,8 @@ void CollidableNode::Init(class GeometricMesh* mesh)
 bool CollidableNode::intersectRay(
     const glm::vec3& pOrigin_wcs,
     const glm::vec3& pDir_wcs,
-    const glm::mat4& pWorldMatrix,
     float & pIsectDist,
+    const glm::mat4& pWorldMatrix,
     float pTmax,
     float pTmin)
 {

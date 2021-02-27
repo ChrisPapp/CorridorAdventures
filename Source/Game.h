@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Corridor.h"
+#include "Level.h"
 #include <unordered_set>
 
 constexpr int SCREEN_WIDTH = 1024;
@@ -10,7 +11,6 @@ constexpr int SCREEN_HEIGHT = 860;
 class Game {
 	typedef std::unordered_set<Entity*> EntityContainer;
 	typedef EntityContainer::iterator EntityContainerIterator;
-	typedef std::vector<Corridor*> VectorContainer;
 public:
 	// Game is a singleton. Get the game instance
 	static Game& Get()
@@ -29,7 +29,13 @@ public:
 	EntityContainerIterator begin() { return entities.begin(); };
 	EntityContainerIterator end() { return entities.end(); };
 
+	void SetPlayerPos(const glm::vec3& pos) { this->player_pos = pos; };
+	const glm::vec3& GetPlayerPos() { return this->player_pos; };
+
 private:
 	EntityContainer entities;
-	VectorContainer corridors;
+
+	glm::vec3 player_pos;
+	
+	Level* level;
 };

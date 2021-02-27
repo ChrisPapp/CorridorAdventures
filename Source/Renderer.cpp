@@ -76,8 +76,8 @@ void Renderer::BuildWorld()
 
 void Renderer::InitCamera()
 {
-	this->m_camera_position = glm::vec3(2, 2, 4.5);
-	this->m_camera_target_position = glm::vec3(0, 0, 0);
+	this->m_camera_position = glm::vec3(0, 0, 0);
+	this->m_camera_target_position = glm::vec3(0, 0, -1);
 	this->m_camera_up_vector = glm::vec3(0, 1, 0);
 
 	this->m_view_matrix = glm::lookAt(
@@ -251,8 +251,9 @@ void Renderer::UpdateCamera(float dt)
 
 	//std::cout << m_camera_position.x << " " << m_camera_position.y << " " << m_camera_position.z << " " << std::endl;
 	//std::cout << m_camera_target_position.x << " " << m_camera_target_position.y << " " << m_camera_target_position.z << " " << std::endl;
-	//m_light.SetPosition(m_camera_position);
-	//m_light.SetTarget(m_camera_target_position);
+	m_light.SetPosition(m_camera_position);
+	m_light.SetTarget(m_camera_target_position);
+	Game::Get().SetPlayerPos(m_camera_position);
 }
 
 bool Renderer::ReloadShaders()
@@ -264,8 +265,6 @@ bool Renderer::ReloadShaders()
 
 void Renderer::Render()
 {
-	this->m_light.SetPosition(m_camera_position + glm::vec3(0, 0, 0.1f) * glm::normalize(m_camera_target_position - m_camera_position));
-	this->m_light.SetTarget(m_camera_target_position);
 	RenderShadowMaps();
 	RenderGeometry();
 	RenderPostProcess();
@@ -402,34 +401,16 @@ void Renderer::RenderShadowMaps()
 
 		glm::mat4 proj = m_light.GetProjectionMatrix() * m_light.GetViewMatrix() * m_world_matrix;
 
-		for (auto& node : this->m_nodes)
+		for (Entity *entity : Game::Get())
 		{
-			glBindVertexArray(node->m_vao);
+			GeometryNode& node = entity->GetDrawnGeometry();
+			glBindVertexArray(node.m_vao);
 
-			m_spot_light_shadow_map_program.loadMat4("uniform_projection_matrix", proj * node->app_model_matrix);
+			m_spot_light_shadow_map_program.loadMat4("uniform_projection_matrix", proj * node.app_model_matrix);
 
-			for (int j = 0; j < node->parts.size(); ++j)
+			for (int j = 0; j < node.parts.size(); ++j)
 			{
-				glDrawArrays(GL_TRIANGLES, node->parts[j].start_offset, node->parts[j].count);
-			}
-
-			glBindVertexArray(0);
-		}
-
-		glm::vec3 camera_dir = normalize(m_camera_target_position - m_camera_position);
-		float_t isectT = 0.f;
-
-		for (auto& node : this->m_collidables_nodes)
-		{
-			if (node->intersectRay(m_camera_position, camera_dir, m_world_matrix, isectT)) continue;
-
-			glBindVertexArray(node->m_vao);
-
-			m_spot_light_shadow_map_program.loadMat4("uniform_projection_matrix", proj * node->app_model_matrix);
-
-			for (int j = 0; j < node->parts.size(); ++j)
-			{
-				glDrawArrays(GL_TRIANGLES, node->parts[j].start_offset, node->parts[j].count);
+				glDrawArrays(GL_TRIANGLES, node.parts[j].start_offset, node.parts[j].count);
 			}
 
 			glBindVertexArray(0);
