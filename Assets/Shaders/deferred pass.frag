@@ -142,8 +142,7 @@ vec3 blinn_phong(
 	const in vec3 pPos,
 	const in vec3 pNormal,
 	const in vec3 pAlbedo,
-	const in vec4 pMask,
-	const in vec3 pEmission)
+	const in vec4 pMask)
 {
 	vec3 halfVector = normalize(pSurfToEye + pSurfToLight);
 
@@ -166,7 +165,7 @@ vec3 blinn_phong(
 	float dist = distance(uniform_light_pos, pPos);
 
 	vec3 brdf = (diffuse + specular) * uniform_light_color / pow(dist, 2);
-	return brdf + pEmission;
+	return brdf;
 }
 
 vec3 fresnel(
@@ -249,14 +248,14 @@ void main(void)
 	float spotEffect = compute_spotlight(surfToLight);
 
 	
+	vec3 emmision = vec3(pos_wcs.a, normal_wcs.a, albedo.a);
 	vec3 brdf = blinn_phong(surfToEye, surfToLight, pos_wcs.xyz,
 		normal_wcs.xyz,
-		albedo.xyz, mask,
-		vec3(pos_wcs.a, normal_wcs.a, albedo.a));
+		albedo.xyz, mask);
 
 	/*vec3 brdf = cook_torrance(surfToEye, surfToLight, pos_wcs.xyz,
 		normal_wcs.xyz,
 		albedo.xyz, mask,
 		vec3(pos_wcs.a, normal_wcs.a, albedo.a));*/
-	out_color = vec4(shadow_value * brdf * spotEffect, 1.0);
+	out_color = vec4(shadow_value * brdf * spotEffect + emmision, 1.0);
 }
