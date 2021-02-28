@@ -344,20 +344,19 @@ void Renderer::RenderStaticGeometry()
 			m_geometry_program.loadInt("uniform_has_tex_normal", (node.parts[j].bump_textureID > 0 || node.parts[j].normal_textureID > 0) ? 1 : 0);
 			m_geometry_program.loadInt("uniform_is_tex_bumb", (node.parts[j].bump_textureID > 0) ? 1 : 0);
 
-			glActiveTexture(GL_TEXTURE0);
-			m_geometry_program.loadInt("uniform_tex_diffuse", 0);
-			glBindTexture(GL_TEXTURE_2D, node.parts[j].diffuse_textureID);
-
+			// GL_TEXTURE0 used for shadow maps...
 			glActiveTexture(GL_TEXTURE1);
 			m_geometry_program.loadInt("uniform_tex_normal", 1);
 			glBindTexture(GL_TEXTURE_2D, node.parts[j].bump_textureID > 0 ?
 				node.parts[j].bump_textureID : node.parts[j].normal_textureID);
 
-			if (node.parts[j].emissive_textureID > 0) {
-				glActiveTexture(GL_TEXTURE2);
-				m_geometry_program.loadInt("uniform_tex_ambient", 2);
-				glBindTexture(GL_TEXTURE_2D, node.parts[j].emissive_textureID);
-			}
+			glActiveTexture(GL_TEXTURE2);
+			m_geometry_program.loadInt("uniform_tex_ambient", 2);
+			glBindTexture(GL_TEXTURE_2D, node.parts[j].emissive_textureID);
+
+			glActiveTexture(GL_TEXTURE3);
+			m_geometry_program.loadInt("uniform_tex_diffuse", 3);
+			glBindTexture(GL_TEXTURE_2D, node.parts[j].diffuse_textureID);
 
 			glDrawArrays(GL_TRIANGLES, node.parts[j].start_offset, node.parts[j].count);
 		}
@@ -395,8 +394,8 @@ void Renderer::RenderGeometry()
 	m_geometry_program.loadMat4("uniform_light_projection_view", m_light.GetProjectionMatrix() * m_light.GetViewMatrix());
 	m_geometry_program.loadInt("uniform_cast_shadows", m_light.GetCastShadowsStatus() ? 1 : 0);
 
-	glActiveTexture(GL_TEXTURE2);
-	m_geometry_program.loadInt("uniform_shadow_map", 2);
+	glActiveTexture(GL_TEXTURE0);
+	m_geometry_program.loadInt("uniform_shadow_map", 0);
 	glBindTexture(GL_TEXTURE_2D, m_light.GetShadowMapDepthTexture());
 
 	RenderStaticGeometry();

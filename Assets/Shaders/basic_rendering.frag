@@ -15,9 +15,11 @@ uniform vec3 uniform_specular;
 uniform vec3 uniform_ambient;
 uniform float uniform_shininess;
 
+uniform int uniform_has_tex_ambient;
 uniform int uniform_has_tex_diffuse;
 uniform int uniform_has_tex_normal;
 uniform int uniform_is_tex_bumb;
+uniform sampler2D uniform_tex_ambient;
 uniform sampler2D uniform_tex_diffuse;
 uniform sampler2D uniform_tex_normal;
 
@@ -178,10 +180,11 @@ vec3 blinn_phong(const in vec3 pSurfToEye, const in vec3 pSurfToLight)
 		((uniform_shininess + 2) * (uniform_shininess + 4)) /
 		(8 * _PI_ * (uniform_shininess + 1.0 / pow(2, uniform_shininess / 2.0)));
 
+	vec3 ambient = uniform_has_tex_ambient == 1 ? texture(uniform_tex_ambient, f_texcoord).rgb : uniform_ambient;
 	vec3 diffuse = kd * NdotL;
 	vec3 specular = NdotL > 0.0 ? ks * fn * pow(NdotH, uniform_shininess) : vec3(0.0);
 
-	return (diffuse + specular) * uniform_light_color + uniform_ambient;
+	return (diffuse + specular) * uniform_light_color + ambient * 255;
 }
 
 void main(void)
