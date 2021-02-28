@@ -9,6 +9,11 @@ enum MeshType
 	CORRIDOR_R,
 	CORRIDOR_F,
 	CORRIDOR_S,
+	CANNON_MOUNT,
+	TURRET,
+	IRIS,
+	PIPE,
+	BEAM,
 	WALL,
 	SIZE_ALL
 };
@@ -20,6 +25,7 @@ public:
 	CollidableNode& GetCollidableGeometry() { return collisionGeom; };
 
 	void SetPosition(const glm::vec3 &pos);
+	void SetTransform(const glm::mat4& transform);
 	virtual bool Update(float dt);
 private:
 	friend class Game;

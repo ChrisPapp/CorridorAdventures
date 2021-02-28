@@ -93,10 +93,10 @@ void Renderer::InitCamera()
 
 bool Renderer::InitLights()
 {
-	this->m_light.SetColor(glm::vec3(40.f));
+	this->m_light.SetColor(glm::vec3(255.f));
 	this->m_light.SetPosition(glm::vec3(0, 3, 4.5));
 	this->m_light.SetTarget(glm::vec3(0));
-	this->m_light.SetConeSize(800, 100);
+	this->m_light.SetConeSize(0, 100);
 	this->m_light.CastShadow(true);
 
 	return true;

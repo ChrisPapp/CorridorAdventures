@@ -3,5 +3,5 @@
 
 class Wall : public Obstacle {
 public:
-	Wall(const glm::vec3& pos);
+	Wall(const glm::vec3& pos, const glm::mat4 &transform = glm::mat4(1.f));
 };

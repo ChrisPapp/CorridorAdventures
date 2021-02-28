@@ -2,10 +2,10 @@
 #include "Game.h"
 #include <algorithm>
 
-Obstacle::Obstacle(MeshType type, const glm::vec3& pos)
+Obstacle::Obstacle(MeshType type, const glm::vec3& pos, const glm::mat4& transform)
 {
 	m_type = type;
-	m_entity = Game::Get().AddEntity(type, pos);
+	m_entity = Game::Get().AddEntity(type, pos, transform);
 	m_pos = pos;
 }
 

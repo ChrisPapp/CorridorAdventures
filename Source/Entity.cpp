@@ -19,9 +19,15 @@ void Entity::SetPosition(const glm::vec3& pos)
 	this->collisionGeom.SetPosition(pos);
 }
 
+void Entity::SetTransform(const glm::mat4& mat)
+{
+	this->drawnGeom.app_model_matrix = mat;
+	this->collisionGeom.app_model_matrix = mat;
+}
+
 bool Entity::Update(float dt)
 {
-	constexpr float collision_distance = 2.f;
+	constexpr float collision_distance = 3.f;
 	std::vector<glm::vec3> dirs = { glm::vec3(0, 0, -1), glm::vec3(0, 1, -1), glm::vec3(0, -1, -1), glm::vec3(1, 0, -1), glm::vec3(-1, 0, -1) };
 	return std::all_of(dirs.begin(), dirs.end(), [this](const glm::vec3& dir) {
 		// Cast rays to every direction. All intersection must be further than 'collision_distance'

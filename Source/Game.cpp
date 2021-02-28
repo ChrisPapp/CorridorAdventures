@@ -23,9 +23,10 @@ void Game::Update(float delta_time)
 		exit(0);
 }
 
-Entity *Game::AddEntity(MeshType type, const glm::vec3& pos)
+Entity *Game::AddEntity(MeshType type, const glm::vec3& pos, const glm::mat4 &transform)
 {
-	Entity* entity = new Entity(type, pos);
+	Entity* entity = new Entity(type);
+	entity->SetTransform(glm::translate(transform, pos));
 	entities.insert(entity);
 	return entity;
 }

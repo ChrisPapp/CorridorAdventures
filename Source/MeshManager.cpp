@@ -6,6 +6,11 @@ static std::unordered_map<MeshType, const char*> mesh_paths = {
 	{MeshType::CORRIDOR_R, "Assets/scene/Corridor_Right.obj"},
 	{MeshType::CORRIDOR_F, "Assets/scene/Corridor_Fork.obj"},
 	{MeshType::CORRIDOR_S, "Assets/scene/Corridor_Straight.obj"},
+	{MeshType::CANNON_MOUNT, "Assets/scene/CannonMount.obj"},
+	{MeshType::TURRET, "Assets/scene/Cannon.obj"},
+	{MeshType::BEAM, "Assets/scene/Beam.obj"},
+	{MeshType::PIPE, "Assets/scene/Pipe.obj"},
+	{MeshType::IRIS, "Assets/scene/Iris.obj"},
 	{MeshType::WALL, "Assets/scene/Wall.obj"},
 };
 
@@ -14,6 +19,11 @@ static std::unordered_map<MeshType, const char*> collidable_paths = {
 	{MeshType::CORRIDOR_R, "Assets/scene/CH-Corridor_Right.obj"},
 	{MeshType::CORRIDOR_F, "Assets/scene/CH-Corridor_Fork.obj"},
 	{MeshType::CORRIDOR_S, "Assets/scene/CH-Corridor_Straight.obj"},
+	{MeshType::CANNON_MOUNT, "Assets/scene/CH-CannonMount.obj"},
+	{MeshType::TURRET, "Assets/scene/CH-Cannon.obj"},
+	{MeshType::BEAM, "Assets/scene/CH-Beam.obj"},
+	{MeshType::PIPE, "Assets/scene/CH-Pipe.obj"},
+	{MeshType::IRIS, "Assets/scene/CH-Iris.obj"},
 	{MeshType::WALL, "Assets/scene/CH-Wall.obj"},
 };
 
