@@ -9,7 +9,8 @@ constexpr float corridor_legth = 20.f, corridor_width = 10.f;
 
 Corridor::Corridor(MeshType type, const glm::vec3 &pos) : Obstacle(type, pos)
 {
-	children.insert(new Wall(pos + glm::vec3(0, 0, -5)));
+	if (type != CORRIDOR_F)
+		children.insert(new Wall(pos + glm::vec3(0, 0, -5)));
 }
 
 Corridor::~Corridor()
@@ -39,8 +40,9 @@ glm::vec3 Corridor::GetEndPos()
 
 // FORK CORRIDOR
 
-ForkCorridor::ForkCorridor(const glm::vec3 &pos) : Corridor(CORRIDOR_F, pos)
+ForkCorridor::ForkCorridor(const glm::vec3 &pos) : Corridor(MeshType::CORRIDOR_F, pos)
 {
+	children.insert(new Obstacle(MeshType::BEAM, pos + glm::vec3(0, 0, -corridor_legth * 0.75), glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(0, 0, -1))));
 }
 
 glm::vec3 ForkCorridor::GetLeftEndPos()
