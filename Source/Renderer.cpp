@@ -96,7 +96,7 @@ bool Renderer::InitLights()
 	this->m_light.SetColor(glm::vec3(255.f));
 	this->m_light.SetPosition(glm::vec3(0, 3, 4.5));
 	this->m_light.SetTarget(glm::vec3(0));
-	this->m_light.SetConeSize(0, 100);
+	this->m_light.SetConeSize(800, 100);
 	this->m_light.CastShadow(true);
 
 	return true;
@@ -251,8 +251,8 @@ void Renderer::UpdateCamera(float dt)
 
 	//std::cout << m_camera_position.x << " " << m_camera_position.y << " " << m_camera_position.z << " " << std::endl;
 	//std::cout << m_camera_target_position.x << " " << m_camera_target_position.y << " " << m_camera_target_position.z << " " << std::endl;
-	m_light.SetPosition(m_camera_position);
-	m_light.SetTarget(m_camera_target_position);
+	m_light.SetPosition(m_camera_position + glm::vec3(0, -2, 0));
+	m_light.SetTarget(m_camera_target_position + glm::vec3(0, -2, -1));
 	Game::Get().SetPlayerPos(m_camera_position);
 }
 
