@@ -522,7 +522,7 @@ void Renderer::RenderGeometry()
 	glDrawBuffers(4, drawbuffers);
 
 	glViewport(0, 0, m_screen_width, m_screen_height);
-	glClearColor(0.f, 0.8f, 1.f, 1.f);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
 	glClearDepth(1.f);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);

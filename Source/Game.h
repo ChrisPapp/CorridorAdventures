@@ -23,7 +23,7 @@ public:
 
 	void Update(float delta_time);
 	void Init();
-	Entity* AddEntity(MeshType type, const glm::vec3& pos, const glm::mat4 &transform = glm::mat4(1.f));
+	Entity* AddEntity(MeshType type, const glm::mat4 &transform = glm::mat4(1.f));
 	void DeleteEntity(Entity* entity);
 
 	EntityContainerIterator begin() { return entities.begin(); };

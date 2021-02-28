@@ -6,7 +6,7 @@
 
 class Obstacle {
 public:
-	Obstacle(MeshType type, const glm::vec3& pos, const glm::mat4 &mat = glm::mat4(1.f));
+	Obstacle(MeshType type, const glm::mat4 &transform = glm::mat4(1.f));
 	virtual ~Obstacle();
 	virtual bool Update(float dt);
 protected:

@@ -2,9 +2,9 @@
 #include "Game.h"
 #include <algorithm>
 
-Obstacle::Obstacle(MeshType type, const glm::vec3& pos, const glm::mat4& transform)
+Obstacle::Obstacle(MeshType type, const glm::mat4& transform)
 {
-	m_entity = Game::Get().AddEntity(type, pos, transform);
+	m_entity = Game::Get().AddEntity(type, transform);
 }
 
 Obstacle::~Obstacle()
@@ -18,7 +18,7 @@ bool Obstacle::Update(float dt)
 	constexpr float player_min_dist = 10.f;
 	// Don't run collision check if player is far away
 	glm::vec3 player_pos = Game::Get().GetPlayerPos();
-	if (player_pos.z + player_min_dist < this->m_entity->position.z || this->m_entity->position.z + player_min_dist < player_pos.z)
+	if (player_pos.z + player_min_dist < this->m_entity->GetPosition().z || this->m_entity->GetPosition().z + player_min_dist < player_pos.z)
 		return true;
 	if (!m_entity->Update(dt))
 		return false;

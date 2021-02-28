@@ -4,10 +4,11 @@
 
 class Corridor : public Obstacle {
 public:
-	Corridor(MeshType type, const glm::vec3 &pos);
+	Corridor(MeshType type, const glm::vec3 &pos, bool generate_obstacles = true);
 	~Corridor();
 	glm::vec3 GetEndPos();
-protected:
+private:
+	Obstacle* GenerateObstacle(const glm::vec3& pos);
 };
 
 class ForkCorridor : public Corridor {

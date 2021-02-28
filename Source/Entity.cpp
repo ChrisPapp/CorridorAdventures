@@ -4,16 +4,14 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "MeshManager.h"
 
-Entity::Entity(enum MeshType type, const glm::vec3 &pos)
+Entity::Entity(enum MeshType type)
 {
-	this->SetPosition(pos);
 	m_type = type;
 }
 
-void Entity::SetPosition(const glm::vec3& pos)
+glm::vec3 Entity::GetPosition()
 {
-	position = pos;
-	this->model_matrix = glm::translate(GetInitialModelMatrix(), pos);
+	return glm::vec3(this->model_matrix[3]);
 }
 
 void Entity::SetTransform(const glm::mat4& mat)

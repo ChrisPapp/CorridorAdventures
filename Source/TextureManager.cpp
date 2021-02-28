@@ -56,7 +56,6 @@ GLuint TextureManager::RequestTexture(const char* filename, bool hasMipmaps)
 	container.filename = filename;
 	container.hasMipmaps = hasMipmaps;
 	GLenum texture_format;
-	GLenum internal_texture_format;
 	GLint nOfColors;
 	glGenTextures(1, &container.textureID);
 	glBindTexture(GL_TEXTURE_2D, container.textureID);
