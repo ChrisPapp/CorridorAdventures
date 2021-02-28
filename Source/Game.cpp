@@ -7,7 +7,7 @@
 
 void Game::Init()
 {
-	CorridorTree tree{ {straight, left, right, straight}, new CorridorTree({{left, straight}}), new CorridorTree({{right, straight}}) };
+	CorridorTree tree{ {straight, left, right, straight}/*, new CorridorTree({{left, straight}}), new CorridorTree({{right, straight}})*/ };
 	this->level = new Level(tree);
 }
 

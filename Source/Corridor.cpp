@@ -3,7 +3,7 @@
 #include "Game.h"
 
 
-constexpr float corridor_legth = 21.f, corridor_width = 10.f;
+constexpr float corridor_legth = 20.f, corridor_width = 10.f;
 
 Corridor::Corridor(MeshType type, const glm::vec3 &pos)
 {
