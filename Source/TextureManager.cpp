@@ -38,10 +38,10 @@ int TextureManager::findTexture(const char* filename, bool hasMipmaps)
 GLuint TextureManager::RequestTexture(const char* filename, bool hasMipmaps)
 {
 	// first check if we can find it in the manager
-	//int index = findTexture(filename, hasMipmaps);
+	int index = findTexture(filename, hasMipmaps);
 
-	//if (index != -1)
-	//	return textures[index].textureID;
+	if (index != -1)
+		return textures[index].textureID;
 
 	// load the texture
 	SDL_Surface* surf = IMG_Load(filename);

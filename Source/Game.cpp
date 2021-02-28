@@ -20,7 +20,7 @@ Game::~Game()
 void Game::Update(float delta_time)
 {
 	if (!this->level->Update(delta_time))
-		exit(0);
+		is_hit = true;
 }
 
 Entity *Game::AddEntity(MeshType type, const glm::vec3& pos, const glm::mat4 &transform)

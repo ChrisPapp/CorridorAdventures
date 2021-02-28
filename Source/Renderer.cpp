@@ -5,6 +5,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Game.h"
+#include "TextureManager.h"
 
 #include <algorithm>
 #include <array>
@@ -283,6 +284,11 @@ void Renderer::RenderPostProcess()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_light.GetShadowMapDepthTexture());
 	m_post_program.loadInt("uniform_shadow_map", 1);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, TextureManager::GetInstance().RequestTexture("Assets/scene/Cracked_Mask.png"));
+	m_post_program.loadInt("uniform_cracked_glass_map", 2);
+	m_post_program.loadInt("uniform_glass_broken", Game::Get().IsHit() ? 1 : 0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 

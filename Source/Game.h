@@ -32,10 +32,13 @@ public:
 	void SetPlayerPos(const glm::vec3& pos) { this->player_pos = pos; };
 	const glm::vec3& GetPlayerPos() { return this->player_pos; };
 
+	bool IsHit() { return is_hit; };
+
 private:
 	EntityContainer entities;
 
 	glm::vec3 player_pos;
 	
 	Level* level;
+	bool is_hit = false;
 };

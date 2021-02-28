@@ -31,7 +31,7 @@ bool Entity::Update(float dt)
 		const glm::vec3& player_pos = Game::Get().GetPlayerPos();
 		if (!this->GetCollidableGeometry().intersectRay(player_pos, dir, dist, this->GetModelMatrix()))
 			return true;
-		return true;
+		return dist > collision_distance;
 	});
 }
 
