@@ -27,10 +27,33 @@ Renderer::~Renderer()
 	glDeleteBuffers(1, &m_vbo_fbo_vertices);
 }
 
+static void GLAPIENTRY OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:
+		printf("OpenGL Error: %s\n", message);
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		printf("OpenGL Warning: %s\n", message);
+		break;
+	default:
+		break;
+}
+	}
+
+static void SetupOpenGLLogging() {
+	glDebugMessageCallback(OpenGLErrorCallback, nullptr);
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+}
+
 bool Renderer::Init(int SCREEN_WIDTH, int SCREEN_HEIGHT)
 {
 	this->m_screen_width = SCREEN_WIDTH;
 	this->m_screen_height = SCREEN_HEIGHT;
+
+	SetupOpenGLLogging();
 
 	bool techniques_initialization = InitShaders();
 
@@ -316,6 +339,7 @@ void Renderer::RenderStaticGeometry()
 			m_geometry_program.loadVec3("uniform_ambient", node.parts[j].ambient);
 			m_geometry_program.loadVec3("uniform_specular", node.parts[j].specular);
 			m_geometry_program.loadFloat("uniform_shininess", node.parts[j].shininess);
+			m_geometry_program.loadInt("uniform_has_tex_ambient", (node.parts[j].emissive_textureID > 0) ? 1 : 0);
 			m_geometry_program.loadInt("uniform_has_tex_diffuse", (node.parts[j].diffuse_textureID > 0) ? 1 : 0);
 			m_geometry_program.loadInt("uniform_has_tex_normal", (node.parts[j].bump_textureID > 0 || node.parts[j].normal_textureID > 0) ? 1 : 0);
 			m_geometry_program.loadInt("uniform_is_tex_bumb", (node.parts[j].bump_textureID > 0) ? 1 : 0);
@@ -328,6 +352,12 @@ void Renderer::RenderStaticGeometry()
 			m_geometry_program.loadInt("uniform_tex_normal", 1);
 			glBindTexture(GL_TEXTURE_2D, node.parts[j].bump_textureID > 0 ?
 				node.parts[j].bump_textureID : node.parts[j].normal_textureID);
+
+			if (node.parts[j].emissive_textureID > 0) {
+				glActiveTexture(GL_TEXTURE2);
+				m_geometry_program.loadInt("uniform_tex_ambient", 2);
+				glBindTexture(GL_TEXTURE_2D, node.parts[j].emissive_textureID);
+			}
 
 			glDrawArrays(GL_TRIANGLES, node.parts[j].start_offset, node.parts[j].count);
 		}
