@@ -95,7 +95,7 @@ Obstacle* Corridor::GenerateObstacle(const glm::vec3& pos)
 
 ForkCorridor::ForkCorridor(const glm::vec3 &pos) : Corridor(MeshType::CORRIDOR_F, pos, false)
 {
-	children.insert(new Obstacle(MeshType::BEAM, glm::translate(glm::rotate(glm::mat4(1.f), glm::radians(90.f), glm::vec3(0, 0, -1)), glm::vec3(0, 0, -corridor_legth * 0.75))));
+	children.insert(new Obstacle(MeshType::BEAM, glm::rotate(glm::translate(glm::mat4(1.f), pos + glm::vec3(0, 0, -corridor_legth * 0.75)), glm::radians(90.f), glm::vec3(0, 0, -1))));
 }
 
 glm::vec3 ForkCorridor::GetLeftEndPos()

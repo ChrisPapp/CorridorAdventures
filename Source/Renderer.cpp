@@ -98,7 +98,7 @@ void Renderer::BuildWorld()
 
 void Renderer::InitCamera()
 {
-	this->m_camera_position = glm::vec3(0, 0, 0);
+	this->m_camera_position = glm::vec3(0, 0, 100);
 	this->m_camera_target_position = glm::vec3(0, 0, -1);
 	this->m_camera_up_vector = glm::vec3(0, 1, 0);
 
@@ -272,30 +272,33 @@ bool Renderer::InitGeometricMeshes()
 
 void Renderer::Update(float dt)
 {
-	this->UpdateGeometry(dt);
 	this->UpdateCamera(dt);
 	m_continous_time += dt;
 }
 
-void Renderer::UpdateGeometry(float dt)
-{
-}
-
 void Renderer::UpdateCamera(float dt)
 {
-	glm::vec3 direction = glm::normalize(m_camera_target_position - m_camera_position);
+	glm::vec3 direction = glm::vec3(0, 0, -1);
 
-	m_camera_position = m_camera_position + (m_camera_movement.x * 5.f * dt) * direction;
-	m_camera_target_position = m_camera_target_position + (m_camera_movement.x * 5.f * dt) * direction;
+	// Auto move forward
+	m_camera_position += (5.f * dt) * direction;
+	// m_camera_target_position += ( 5.f * dt) * direction;
+
+	glm::vec3 up = glm::vec3(0, 1, 0);
+
+	m_camera_position = m_camera_position + (m_camera_movement.x * 5.f * dt) * up;
+	m_camera_target_position = m_camera_target_position + (m_camera_movement.x * 5.f * dt) * up;
 
 	glm::vec3 right = glm::normalize(glm::cross(direction, m_camera_up_vector));
 
 	m_camera_position = m_camera_position + (m_camera_movement.y * 5.f * dt) * right;
 	m_camera_target_position = m_camera_target_position + (m_camera_movement.y * 5.f * dt) * right;
 
+
+	
 	constexpr float speed = glm::pi<float>() * 0.002f;
-	glm::mat4 rotation = glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.y * speed, right);
-	rotation *= glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.x * speed, m_camera_up_vector);
+	glm::mat4 rotation(1.f); /*= glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.y * speed, right);
+	rotation *= glm::rotate(glm::mat4(1.f), m_camera_look_angle_destination.x * speed, m_camera_up_vector); */
 	m_camera_look_angle_destination = glm::vec2(0.f);
 
 	direction = rotation * glm::vec4(direction, 0.f);
@@ -303,8 +306,6 @@ void Renderer::UpdateCamera(float dt)
 
 	m_view_matrix = glm::lookAt(m_camera_position, m_camera_target_position, m_camera_up_vector);
 
-	//std::cout << m_camera_position.x << " " << m_camera_position.y << " " << m_camera_position.z << " " << std::endl;
-	//std::cout << m_camera_target_position.x << " " << m_camera_target_position.y << " " << m_camera_target_position.z << " " << std::endl;
 	m_light.SetPosition(m_camera_position + glm::vec3(0, -2, 0));
 	m_light.SetTarget(m_camera_target_position + glm::vec3(0, -2, -1));
 	Game::Get().SetPlayerPos(m_camera_position);
