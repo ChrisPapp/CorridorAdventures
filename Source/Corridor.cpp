@@ -1,27 +1,18 @@
 #pragma once
 #include "Corridor.h"
 #include "Game.h"
+#include "Wall.h"
 
 
 constexpr float corridor_legth = 20.f, corridor_width = 10.f;
 
-Corridor::Corridor(MeshType type, const glm::vec3 &pos)
+Corridor::Corridor(MeshType type, const glm::vec3 &pos) : Obstacle(type, pos)
 {
-	m_type = type;
-	m_corridor = Game::Get().AddEntity(type, pos);
-	m_wall = Game::Get().AddEntity(MeshType::WALL, pos + glm::vec3(0, 0, -3));
-	m_pos = pos;
+	children.insert(new Wall(pos + glm::vec3(0, 0, -5)));
 }
 
 Corridor::~Corridor()
 {
-	Game::Get().DeleteEntity(m_corridor);
-	Game::Get().DeleteEntity(m_wall);
-}
-
-bool Corridor::Update(float dt)
-{
-	return m_corridor->Update(dt) && m_wall->Update(dt);
 }
 
 glm::vec3 Corridor::GetEndPos()
