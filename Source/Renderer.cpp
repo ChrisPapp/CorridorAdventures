@@ -4,7 +4,6 @@
 #include "ShaderProgram.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "MeshManager.h"
 #include "Game.h"
 
 #include <algorithm>
@@ -198,10 +197,7 @@ bool Renderer::InitCommonItems()
 
 bool Renderer::InitGeometricMeshes()
 {
-	if (!MeshManager::Get().Init())
-		return false;
 	Game::Get().Init();
-	MeshManager::Get().Clear();
 
 
 	return true;
@@ -216,15 +212,6 @@ void Renderer::Update(float dt)
 
 void Renderer::UpdateGeometry(float dt)
 {
-#if 0
-	GeometryNode& ball = *this->m_nodes[MeshType::BALL];
-
-	ball.app_model_matrix =
-		glm::translate(glm::mat4(1.f), ball.m_aabb.center) *
-		glm::rotate(glm::mat4(1.f), m_continous_time, glm::vec3(.5f, .5f, 0.f)) *
-		glm::translate(glm::mat4(1.f), -ball.m_aabb.center) *
-		ball.model_matrix;
-#endif
 }
 
 void Renderer::UpdateCamera(float dt)
@@ -313,9 +300,9 @@ void Renderer::RenderStaticGeometry()
 		GeometryNode& node = entity->GetDrawnGeometry();
 		glBindVertexArray(node.m_vao);
 
-		m_geometry_program.loadMat4("uniform_projection_matrix", proj * node.app_model_matrix);
-		m_geometry_program.loadMat4("uniform_normal_matrix", glm::transpose(glm::inverse(m_world_matrix * node.app_model_matrix)));
-		m_geometry_program.loadMat4("uniform_world_matrix", m_world_matrix * node.app_model_matrix);
+		m_geometry_program.loadMat4("uniform_projection_matrix", proj * entity->GetModelMatrix());
+		m_geometry_program.loadMat4("uniform_normal_matrix", glm::transpose(glm::inverse(m_world_matrix * entity->GetModelMatrix())));
+		m_geometry_program.loadMat4("uniform_world_matrix", m_world_matrix * entity->GetModelMatrix());
 
 		for (int j = 0; j < node.parts.size(); ++j)
 		{
@@ -406,7 +393,7 @@ void Renderer::RenderShadowMaps()
 			GeometryNode& node = entity->GetDrawnGeometry();
 			glBindVertexArray(node.m_vao);
 
-			m_spot_light_shadow_map_program.loadMat4("uniform_projection_matrix", proj * node.app_model_matrix);
+			m_spot_light_shadow_map_program.loadMat4("uniform_projection_matrix", proj * entity->GetModelMatrix());
 
 			for (int j = 0; j < node.parts.size(); ++j)
 			{

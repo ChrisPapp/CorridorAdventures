@@ -3,8 +3,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "Entity.h"
 #include "GeometricMesh.h"
+#include "Entity.h"
 
 class MeshManager {
 
@@ -16,11 +16,12 @@ public:
 		static MeshManager manager;
 		return manager;
 	}
-	GeometricMesh* GetMesh(MeshType type);
-	GeometricMesh* GetCollisionMesh(enum MeshType type);
+	GeometryNode* GetNode(enum MeshType type);
+	CollidableNode* GetCollisionNode(enum MeshType type);
 	bool Init();
 	void Clear();
 private:
 	OBJLoader loader;
-	std::unordered_map<MeshType, GeometricMesh*> draw_meshes, collision_meshes;
+	std::unordered_map<MeshType, GeometryNode*> draw_meshes;
+	std::unordered_map<MeshType, CollidableNode*> collision_meshes;
 };

@@ -36,7 +36,7 @@ bool MeshManager::Init()
 	// Load and cache all meshes
 	for (int i = 0; i < MeshType::SIZE_ALL; i++) {
 		MeshType type = static_cast<MeshType>(i);
-		if (!GetMesh(type) || !GetCollisionMesh(type))
+		if (!GetNode(type) || !GetCollisionNode(type))
 			return false;
 	}
 	return true;
@@ -45,29 +45,32 @@ bool MeshManager::Init()
 void MeshManager::Clear()
 {
 	// Clear cached meshes
-	std::for_each(draw_meshes.begin(), draw_meshes.end(), [](std::pair<MeshType, GeometricMesh*> pair) { delete pair.second; });
+	std::for_each(draw_meshes.begin(), draw_meshes.end(), [](std::pair<MeshType, GeometryNode*> pair) { delete pair.second; });
 	draw_meshes.clear();
-	std::for_each(collision_meshes.begin(), collision_meshes.end(), [](std::pair<MeshType, GeometricMesh*> pair) { delete pair.second; });
+	std::for_each(collision_meshes.begin(), collision_meshes.end(), [](std::pair<MeshType, CollidableNode*> pair) { delete pair.second; });
 	collision_meshes.clear();
 }
 
 
-GeometricMesh* MeshManager::GetMesh(enum MeshType type)
+GeometryNode* MeshManager::GetNode(enum MeshType type)
 {
 	auto it = this->draw_meshes.find(type);
 	if (it != draw_meshes.end()) {
 		return it->second;
 	}
 	else {
-		GeometricMesh *mesh = loader.load(mesh_paths[type]);
+		GeometricMesh* mesh = loader.load(mesh_paths[type]);
+		GeometryNode* node = new GeometryNode();
 		if (!mesh)
 			return nullptr;
-		draw_meshes[type] = mesh;
-		return mesh;
+		node->Init(mesh);
+		draw_meshes[type] = node;
+		delete mesh;
+		return node;
 	}
 }
 
-GeometricMesh* MeshManager::GetCollisionMesh(enum MeshType type)
+CollidableNode* MeshManager::GetCollisionNode(enum MeshType type)
 {
 	auto it = this->collision_meshes.find(type);
 	if (it != this->collision_meshes.end()) {
@@ -77,7 +80,10 @@ GeometricMesh* MeshManager::GetCollisionMesh(enum MeshType type)
 		GeometricMesh* mesh = loader.load(collidable_paths[type]);
 		if (!mesh)
 			return nullptr;
-		collision_meshes[type] = mesh;
-		return mesh;
+		CollidableNode* node = new CollidableNode();
+		node->Init(mesh);
+		collision_meshes[type] = node;
+		delete mesh;
+		return node;
 	}
 }

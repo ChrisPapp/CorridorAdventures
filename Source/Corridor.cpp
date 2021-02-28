@@ -18,9 +18,9 @@ Corridor::~Corridor()
 
 glm::vec3 Corridor::GetEndPos()
 {
-	glm::vec3 end_pos = m_pos;
+	glm::vec3 end_pos = m_entity->position;
 	end_pos.z -= corridor_legth;
-	switch (m_type) {
+	switch (m_entity->m_type) {
 	case CORRIDOR_L:
 		end_pos.x -= corridor_width / 2.f;
 		break;
@@ -45,10 +45,10 @@ ForkCorridor::ForkCorridor(const glm::vec3 &pos) : Corridor(CORRIDOR_F, pos)
 
 glm::vec3 ForkCorridor::GetLeftEndPos()
 {
-	return this->m_pos + glm::vec3(-corridor_width / 2.f, 0, -corridor_legth);
+	return this->m_entity->position + glm::vec3(-corridor_width / 2.f, 0, -corridor_legth);
 }
 
 glm::vec3 ForkCorridor::GetRightEndPos()
 {
-	return this->m_pos + glm::vec3(corridor_width / 2.f, 0, -corridor_legth);
+	return this->m_entity->position + glm::vec3(corridor_width / 2.f, 0, -corridor_legth);
 }

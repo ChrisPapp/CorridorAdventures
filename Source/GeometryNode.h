@@ -13,8 +13,6 @@ public:
 
 	virtual void Init(class GeometricMesh* mesh);
 
-	void SetPosition(const glm::vec3& pos);
-
 	struct Objects
 	{
 		unsigned int start_offset;
@@ -40,8 +38,6 @@ public:
 	};
 
 	std::vector<Objects> parts;
-
-	glm::mat4 app_model_matrix = glm::mat4(1.f);
 	aabb m_aabb;
 
 	GLuint m_vao;

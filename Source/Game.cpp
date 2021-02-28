@@ -7,7 +7,7 @@
 
 void Game::Init()
 {
-	CorridorTree tree{ {straight, left/*, right, straight*/}/*, new CorridorTree({{left, straight}}), new CorridorTree({{right, straight}})*/ };
+	CorridorTree tree{ {straight, left, right, straight},/* new CorridorTree({{left, straight}}), new CorridorTree({{right, straight}})*/ };
 	this->level = new Level(tree);
 }
 
@@ -25,7 +25,7 @@ void Game::Update(float delta_time)
 
 Entity *Game::AddEntity(MeshType type, const glm::vec3& pos, const glm::mat4 &transform)
 {
-	Entity* entity = new Entity(type);
+	Entity* entity = new Entity(type, pos);
 	entity->SetTransform(glm::translate(transform, pos));
 	entities.insert(entity);
 	return entity;

@@ -11,8 +11,6 @@ public:
 	virtual bool Update(float dt);
 protected:
 	Entity* m_entity;
-	glm::vec3 m_pos;
-	MeshType m_type;
 
 	typedef std::unordered_set<Obstacle*> ObstacleContainer;
 	ObstacleContainer children;
