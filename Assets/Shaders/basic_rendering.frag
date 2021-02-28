@@ -30,7 +30,7 @@ uniform float uniform_light_penumbra;
 
 uniform mat4 uniform_light_projection_view;
 uniform int uniform_cast_shadows;
-uniform float uniform_constant_bias = 0.0002;
+uniform float uniform_constant_bias = 0.001;
 
 uniform sampler2D uniform_shadow_map;
 
@@ -138,8 +138,8 @@ float shadow(vec3 pwcs)
 	plcs.z = 0.5 * plcs.z + 0.5;
 
 	// sample shadow map
-	//return shadow_nearest(plcs.xyz);
-	return shadow_pcf2x2_weighted(plcs.xyz);
+	return shadow_nearest(plcs.xyz);
+	//return shadow_pcf2x2_weighted(plcs.xyz);
 	//return shadow_pcf2x2_mean(plcs.xyz);
 }
 
