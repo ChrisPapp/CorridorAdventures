@@ -156,33 +156,43 @@ copy "$(SolutionDir)3rd party\bin\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Cannon.cpp" />
     <ClCompile Include="Source\CollidableNode.cpp" />
+    <ClCompile Include="Source\Corridor.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GeometricMesh.cpp" />
     <ClCompile Include="Source\GeometryNode.cpp" />
+    <ClCompile Include="Source\Level.cpp" />
     <ClCompile Include="Source\LightNode.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\MeshManager.cpp" />
     <ClCompile Include="Source\OBJLoader.cpp" />
+    <ClCompile Include="Source\Obstacle.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\ShaderProgram.cpp" />
     <ClCompile Include="Source\TextureManager.cpp" />
     <ClCompile Include="Source\Tools.cpp" />
+    <ClCompile Include="Source\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Cannon.h" />
     <ClInclude Include="Source\CollidableNode.h" />
+    <ClInclude Include="Source\Corridor.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\GeometricMesh.h" />
     <ClInclude Include="Source\GeometryNode.h" />
+    <ClInclude Include="Source\Level.h" />
     <ClInclude Include="Source\LightNode.h" />
     <ClInclude Include="Source\MeshManager.h" />
     <ClInclude Include="Source\OBJLoader.h" />
+    <ClInclude Include="Source\Obstacle.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\ShaderProgram.h" />
     <ClInclude Include="Source\TextureManager.h" />
     <ClInclude Include="Source\Tools.h" />
+    <ClInclude Include="Source\Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\basic_rendering.frag" />
